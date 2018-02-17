@@ -1,4 +1,5 @@
 import json
+import clean
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -50,4 +51,6 @@ if __name__ == '__main__':
     with open('black.json', 'r') as data_file:
         read_data = data_file.read()
         json_data = json.loads(read_data)
-    plot_it(json_data)
+    pprint(json_data)
+    cleaned_data = clean.clean(json_data)
+    plot_it(cleaned_data)
