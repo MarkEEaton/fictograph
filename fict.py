@@ -67,7 +67,7 @@ def submit():
             except:
                 print('passing')
 
-        with open('auster.json', 'w') as data_file:
+        with open('vance.json', 'w') as data_file:
             json.dump(works, data_file)
 
     else:

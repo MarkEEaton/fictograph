@@ -1,5 +1,3 @@
-from pprint import pprint
-
 def clean(data):
     cleaned = []
     for i in range(len(data)):
@@ -8,5 +6,4 @@ def clean(data):
                 cleaned.append(data[i])
         except IndexError:
             cleaned.append(data[i])
-    pprint(cleaned)
     return cleaned
