@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from numpy import linspace
+import numpy as np
 from scipy.interpolate import spline
 from pprint import pprint
 from adjustText import adjust_text
@@ -12,22 +12,24 @@ def plot_it(data):
     df = pd.DataFrame(data=data)
     df = df.sort_values(['date'])
     
-    #x_smooth = linspace(df['date'].min(), df['date'].max(), 200)
-    #y_smooth = spline(df['date'], df['rating'], x_smooth)
-
-    sns.set(style='darkgrid')
+    # make it smooth
+    x = np.linspace(df['date'].min(), df['date'].max(), num=200)
+    y_smooth = spline(df['date'], df['rating'], x, order=2)
     
-    ax = df.plot.line(x='date', y='rating')
+    sns.set(style='darkgrid')
+    ax = plt.plot(x, y_smooth)
     
     # set the ticks and limits
     date_max = df['date'].max() + 5
     date_min = df['date'].min()
-    date_range = range(date_min, date_max, 5)
+    date_range = range(date_min, date_max)
     
     ylim_max = df['rating'].max() + 0.2
     ylim_min = df['rating'].min() - 0.2
-    plt.xticks(date_range, rotation='vertical')
+
+    plt.xticks(date_range, date_range, rotation='vertical')
     plt.ylim(ylim_min, ylim_max)
+    plt.xlim(date_min, date_max)
     
     # set up the labels
     texts = []
@@ -45,7 +47,7 @@ def plot_it(data):
     plt.show()
 
 if __name__ == '__main__':
-    with open('data.py', 'r') as data_file:
+    with open('black.json', 'r') as data_file:
         read_data = data_file.read()
         json_data = json.loads(read_data)
     plot_it(json_data)
