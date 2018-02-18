@@ -1,8 +1,9 @@
 import requests
+import asyncio
 import lxml
 import json
 import key
-import clean
+import utils 
 from plt import plot_it
 from bs4 import BeautifulSoup
 from wtforms import Form, StringField, validators
@@ -41,33 +42,9 @@ def getPlot():
         # create the data list
         works = []
         print("Number of books found: " + str(len(soup2.find_all('book'))))
-        for book in soup2.find_all('book'):
-            print(book.title.string)
-            # use the book.show api to get original publication year
-            req3 = requests.get('https://www.goodreads.com/book/show.xml?key=' + key.token + '&id=' + book.id.string)
-            soup3 = BeautifulSoup(req3.text, 'xml')
-            try:
-                year = soup3.book.work.original_publication_year.string
+        works = utils.asy(soup2)
 
-                # truncate long titles
-                if len(book.title.string) > 20:
-                    title = book.title.string[:20] + '...'
-                else:
-                    title = book.title.string
-            
-                if year != None:
-                    work = {
-                       'title': title,
-                       'date': int(year),
-                       'rating': float(book.average_rating.string),
-                       'id': book.id.string
-                    }
-                    works.append(work)
-                else: pass 
-            except Exception as e:
-                print(e)
-
-        cleaned_data = clean.clean(works)
+        cleaned_data = utils.clean(works)
         plot_url = plot_it(cleaned_data)
         return render_template("index.html", plot_url=plot_url)
         
