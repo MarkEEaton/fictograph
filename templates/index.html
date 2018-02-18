@@ -10,17 +10,15 @@
 	<h1>
 		the fictograph
 	</h1>
+	<br />
 	<p>
-		This application shows the awesomeness of an author's work chronologically, as measured by the books' average star rating on Goodreads.	
-	</p>
-	<p>	
-		Inspired by the hand-drawn fictographs of Greg Priestman.
+	This application shows the awesomeness of an author's work chronologically, as measured by the books' average star rating on Goodreads.	<br />Inspired by the hand-drawn fictographs of Greg Priestman.
 	</p>
 	<p>
-		<form class="form-inline" autocomplete="off">
+	<form class="form-inline" autocomplete="off" action="{{ url_for('getPlot') }}" method="post">
 			<div class="form-group">
-				<input name="username" class="form-control" placeholder="Author's name" type="text">
-				<a id="submit" class="btn btn-secondary active" type="button" style="margin-left:5px">Graph it</a>
+				<input name="authorname" class="form-control" placeholder="Author's name" type="text">
+				<input type="submit" value="Graph it" class="btn btn-secondary active" style="margin-left:5px">
 			</div>
 		</form>
 	</p>

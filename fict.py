@@ -6,7 +6,7 @@ import clean
 from plt import plot_it
 from bs4 import BeautifulSoup
 from wtforms import Form, StringField, validators
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 
 app = Flask(__name__)
 
@@ -14,23 +14,17 @@ class SearchForm(Form):
     """ set up wtforms class """
     keywords = StringField('query', [
         validators.Length(max=200, message="length"),
-        validators.Regexp('^[\-\+a-zA-Z]*$', message="regex")])
+        validators.Regexp('^[\-\+a-zA-Z]*$', message='regex')])
 
 
 @app.route('/')
 def index():
-    with open('json/irving.json', 'r') as data_file:
-        read_data = data_file.read()
-        json_data = json.loads(read_data)
-    cleaned_data = clean.clean(json_data)
-    plot_url = plot_it(cleaned_data)
-    return render_template("index.html", plot_url=plot_url)
+    return render_template('index.html', plot_url='')
 
-
-@app.route('/submit', methods=['POST'])
-def submit():
+@app.route('/getPlot', methods=['POST'])
+def getPlot():
     # get the author's name
-    name = input('Author name: ')
+    name = request.form['authorname'] 
     name = name.replace(' ', '+')
     
     form = SearchForm(keywords=name)
@@ -69,14 +63,14 @@ def submit():
                        'id': book.id.string
                     }
                     works.append(work)
-                    print('appending!')
-                else: print('year == None')
-            except:
-                print('passing')
+                else: pass 
+            except Exception as e:
+                print(e)
 
-        with open('king.json', 'w') as data_file:
-            json.dump(works, data_file)
-
+        cleaned_data = clean.clean(works)
+        plot_url = plot_it(cleaned_data)
+        return render_template("index.html", plot_url=plot_url)
+        
     else:
         print('failed regex')
 
