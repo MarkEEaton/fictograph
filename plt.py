@@ -36,14 +36,13 @@ def plot_it(data):
     date_min = df.date.min() - 2
     date_range = range(date_min, date_max, 4)
     
+    ylim_max = df.rating.max() + 0.2
+    ylim_min = df.rating.min() - 0.2
+
+    plt.ylim(ylim_min, ylim_max)
     plt.xticks(date_range, date_range, rotation='vertical')
-    plt.tick_params(axis='y',
-                    which='both',
-                    left='off',
-                    right='off',
-                    labelleft='off')
     plt.xlim(date_min, date_max)
-    
+
     # set up the labels
     texts1 = []
     texts2 = []
@@ -68,7 +67,7 @@ def plot_it(data):
                 only_move={'text': 'y', 'points': 'y'},
                 arrowprops=dict(arrowstyle='-', color='black', lw=0.5))
     
-    plt.ylabel('Awesomeness')
+    plt.ylabel('Awesomeness\n(average Goodreads stars)')
     plt.show()
 
 if __name__ == '__main__':
