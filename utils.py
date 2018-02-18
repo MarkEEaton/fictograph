@@ -14,30 +14,52 @@ def clean(data):
             cleaned.append(data[i])
     return cleaned
 
-def asy(soup):
-    works = []
+def gather_books(soup):
+    urls = []
 
     for book in soup.find_all('book'): 
-        print(book.title.string)
         # use the book.show api to get original publication year
-        req3 = requests.get('https://www.goodreads.com/book/show.xml?key=' + key.token + '&id=' + book.id.string)
+        url = 'https://www.goodreads.com/book/show.xml?key=' + key.token + '&id=' + book.id.string
+        urls.append(url)
+    return urls
 
-        soup3 = BeautifulSoup(req3.text, 'xml')
+async def fetch(session, url):
+    with aiohttp.Timeout(10):
+        async with session.get(url) as response:
+            if response.status != 200:
+                response.raise_for_status()
+            return await response.text()
+
+
+async def fetch_all(session, urls, loop):
+    results = await asyncio.gather(*[loop.create_task(fetch(session, url)) for url in urls])
+    return results
+
+def run_asy(urls):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    with aiohttp.ClientSession(loop=loop) as session:
+        htmls = loop.run_until_complete(
+            fetch_all(session, urls, loop))
+    
+    works = []
+    for page in htmls:
+        soup3 = BeautifulSoup(page, 'xml')
         try:
             year = soup3.book.work.original_publication_year.string
 
             # truncate long titles
-            if len(book.title.string) > 20:
-                title = book.title.string[:20] + '...'
+            if len(soup3.book.title.string) > 20:
+                title = soup3.book.title.string[:20] + '...'
             else:
-                title = book.title.string
+                title = soup3.book.title.string
        
             if year != None:
                 work = {
                    'title': title,
                    'date': int(year),
-                   'rating': float(book.average_rating.string),
-                   'id': book.id.string
+                   'rating': float(soup3.book.average_rating.string),
+                   'id': soup3.book.id.string
                 }
                 works.append(work)
             else: pass 

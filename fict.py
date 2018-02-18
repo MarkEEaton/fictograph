@@ -42,7 +42,8 @@ def getPlot():
         # create the data list
         works = []
         print("Number of books found: " + str(len(soup2.find_all('book'))))
-        works = utils.asy(soup2)
+        book_urls = utils.gather_books(soup2)
+        works = utils.run_asy(book_urls)
 
         cleaned_data = utils.clean(works)
         plot_url = plot_it(cleaned_data)
