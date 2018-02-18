@@ -1,5 +1,6 @@
 import json
-import clean
+import io
+import base64
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -18,7 +19,7 @@ def plot_it(data):
     df = pd.DataFrame(data=data)
     df = df.sort_values(['date'])
     
-    sns.set(style='darkgrid')
+    #sns.set(style='darkgrid')
 
     # if there's only two books, don't bother smoothing
     if len(df) == 2:
@@ -42,6 +43,9 @@ def plot_it(data):
     plt.ylim(ylim_min, ylim_max)
     plt.xticks(date_range, date_range, rotation='vertical')
     plt.xlim(date_min, date_max)
+    ax = plt.gca()
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
 
     # set up the labels
     texts1 = []
@@ -68,11 +72,13 @@ def plot_it(data):
                 arrowprops=dict(arrowstyle='-', color='black', lw=0.5))
     
     plt.ylabel('Awesomeness\n(average Goodreads stars)')
-    plt.show()
+    
+    # to the web!
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
 
-if __name__ == '__main__':
-    with open('json/irving.json', 'r') as data_file:
-        read_data = data_file.read()
-        json_data = json.loads(read_data)
-    cleaned_data = clean.clean(json_data)
-    plot_it(cleaned_data)
+    plot_url = base64.b64encode(img.getvalue()).decode()
+    return plot_url
+
+

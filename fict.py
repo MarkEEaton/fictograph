@@ -2,6 +2,8 @@ import requests
 import lxml
 import json
 import key
+import clean
+from plt import plot_it
 from bs4 import BeautifulSoup
 from wtforms import Form, StringField, validators
 from flask import Flask, render_template, request
@@ -17,7 +19,12 @@ class SearchForm(Form):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    with open('json/irving.json', 'r') as data_file:
+        read_data = data_file.read()
+        json_data = json.loads(read_data)
+    cleaned_data = clean.clean(json_data)
+    plot_url = plot_it(cleaned_data)
+    return render_template("index.html", plot_url=plot_url)
 
 
 @app.route('/submit', methods=['POST'])
