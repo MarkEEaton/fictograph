@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from scipy.interpolate import spline
+from scipy.interpolate import pchip
 from adjustText import adjust_text
 
 
@@ -26,11 +26,10 @@ def plot_it(data):
         y = df.rating
         ax = plt.plot(x, y)
     
-    # otherwise make it smooth
     else:
         x_smooth = np.linspace(df.date.min(), df.date.max(), num=200)
-        y_smooth = spline(df.date, df.rating, x_smooth, order=2)
-        ax = plt.plot(x_smooth, y_smooth)
+        pch = pchip(df.date, df.rating)
+        plt.plot(x_smooth, pch(x_smooth), 'b-', label='pchip')    
     
     # set the ticks and limits
     date_max = df.date.max() + 2 
@@ -46,12 +45,24 @@ def plot_it(data):
     plt.xlim(date_min, date_max)
     
     # set up the labels
-    texts = []
-    for x, y, s in zip(df.date, df.rating, df.title):
-        texts.append(plt.text(x, y, s, fontsize=6))
+    texts1 = []
+    texts2 = []
+    zipped = zip(df.date, df.rating, df.title)
+    sorted_items = sorted(zipped, key=lambda t: t[1], reverse=True)
+    top = sorted_items[:5]
+    bottom = sorted_items[-5:]
+    for x, y, s in (top[:5]):
+        texts1.append(plt.text(x, y, s, fontsize=6))
+    for x, y, s in (bottom[:5]):
+        texts2.append(plt.text(x, y, s, fontsize=6))
     
     # make the labels adjust to each other
-    adjust_text(texts,
+    adjust_text(texts1,
+                force_text=10,
+                va='top',
+                only_move={'text': 'y', 'points': 'y'},
+                arrowprops=dict(arrowstyle='-', color='black', lw=0.5))
+    adjust_text(texts2,
                 force_text=10,
                 va='top',
                 only_move={'text': 'y', 'points': 'y'},
@@ -61,7 +72,7 @@ def plot_it(data):
     plt.show()
 
 if __name__ == '__main__':
-    with open('auster.json', 'r') as data_file:
+    with open('king.json', 'r') as data_file:
         read_data = data_file.read()
         json_data = json.loads(read_data)
     cleaned_data = clean.clean(json_data)
