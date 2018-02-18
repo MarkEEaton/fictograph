@@ -1,0 +1,31 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<title>
+	The fictograph
+</title>	
+</head>
+<body>
+<div style="padding:20px">
+	<h1>
+		the fictograph
+	</h1>
+	<p>
+		This application shows the awesomeness of an author's work chronologically, as measured by the books' average star rating on Goodreads.	
+	</p>
+	<p>	
+		Inspired by the hand-drawn fictographs of Greg Priestman.
+	</p>
+	<p>
+		<form class="form-inline" autocomplete="off">
+			<div class="form-group">
+				<input name="username" class="form-control" placeholder="Author's name" type="text">
+				<a id="submit" class="btn btn-secondary active" type="button" style="margin-left:5px">Graph it</a>
+			</div>
+		</form>
+	</p>
+	<div id='plot'>
+	</div>
+</div>
+</body>
+</html>

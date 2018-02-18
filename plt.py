@@ -71,7 +71,7 @@ def plot_it(data):
     plt.show()
 
 if __name__ == '__main__':
-    with open('king.json', 'r') as data_file:
+    with open('json/irving.json', 'r') as data_file:
         read_data = data_file.read()
         json_data = json.loads(read_data)
     cleaned_data = clean.clean(json_data)
