@@ -28,7 +28,7 @@ def plot_it(data):
         ax = plt.plot(x, y)
     
     else:
-        x_smooth = np.linspace(df.date.min(), df.date.max(), num=200)
+        x_smooth = np.linspace(df.date.min(), df.date.max(), num=400)
         pch = pchip(df.date, df.rating)
         plt.plot(x_smooth, pch(x_smooth), 'b-', label='pchip')    
     
@@ -55,9 +55,9 @@ def plot_it(data):
     top = sorted_items[:5]
     bottom = sorted_items[-5:]
     for x, y, s in (top[:5]):
-        texts1.append(plt.text(x, y, s, fontsize=6))
+        texts1.append(plt.text(x, y, s, fontsize=8))
     for x, y, s in (bottom[:5]):
-        texts2.append(plt.text(x, y, s, fontsize=6))
+        texts2.append(plt.text(x, y, s, fontsize=8))
     
     # make the labels adjust to each other
     adjust_text(texts1,
@@ -74,6 +74,8 @@ def plot_it(data):
     plt.ylabel('Awesomeness\n(average Goodreads stars)')
     
     # to the web!
+    fig = plt.gcf()
+    fig.set_size_inches(7, 7)
     img = io.BytesIO()
     plt.savefig(img, format='png')
     img.seek(0)
