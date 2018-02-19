@@ -31,11 +31,11 @@
 				}
 			});
 		var submit_form = function(e) {
-			$('#message').append('<div class="alert alert-dark" role="alert"><strong>Patience!</strong> This will take a long time.</div>')
+			$('#message').empty().append('<div class="alert alert-dark" role="alert"><strong>Patience!</strong> This will take a long time.</div>')
 			};
 		$('#graphit').on('click', submit_form);
 	</script>
-	<div id='message'>
+	<div id='message' style='position:absolute;'>
 	</div>
 	<div id='plot'>
 		<img src='data:image/png;base64, {{ plot_url }}'>

@@ -4,7 +4,7 @@ import lxml
 import json
 import key
 import utils 
-from plt import plot_it
+import plt
 from bs4 import BeautifulSoup
 from wtforms import Form, StringField, validators
 from flask import Flask, render_template, request, url_for
@@ -20,7 +20,8 @@ class SearchForm(Form):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    plot_url = plt.faux_plot()
+    return render_template('index.html', plot_url=plot_url)
 
 @app.route('/getPlot', methods=['POST'])
 def getPlot():
@@ -46,7 +47,7 @@ def getPlot():
         works = utils.run_asy(book_urls)
 
         cleaned_data = utils.clean(works)
-        plot_url = plot_it(cleaned_data)
+        plot_url = plt.plot_it(cleaned_data)
         return render_template("index.html", plot_url=plot_url)
         
     else:

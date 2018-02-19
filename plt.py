@@ -85,3 +85,14 @@ def plot_it(data):
     return plot_url
 
 
+def faux_plot():
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode()
+    plt.close()
+    return plot_url
+
+
+if __name__ == '__main__':
+    faux_plot()
