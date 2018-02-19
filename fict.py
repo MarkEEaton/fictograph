@@ -20,7 +20,7 @@ class SearchForm(Form):
 
 @app.route('/')
 def index():
-    return render_template('index.html', plot_url='')
+    return render_template('index.html')
 
 @app.route('/getPlot', methods=['POST'])
 def getPlot():

@@ -1,6 +1,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <title>
 	The fictograph
 </title>	
@@ -17,13 +18,27 @@
 	<p>
 	<form class="form-inline" autocomplete="off" action="{{ url_for('getPlot') }}" method="post">
 			<div class="form-group">
-				<input name="authorname" class="form-control" placeholder="Author's name" type="text">
-				<input type="submit" value="Graph it" class="btn btn-secondary active" style="margin-left:5px">
+				<input name="authorname" class="form-control" placeholder="Author's name" type="text" id="on_enter">
+				<input type="submit" id="graphit" value="Graph it" class="btn btn-secondary active" style="margin-left:5px">
 			</div>
 		</form>
 	</p>
+	<script type="text/javascript">
+		$('#on_enter').keypress(function(e) {
+			if (e.which == 13) {
+				submit_form();
+				return false;
+				}
+			});
+		var submit_form = function(e) {
+			$('#message').append('<div class="alert alert-dark" role="alert"><strong>Patience!</strong> This will take a long time.</div>')
+			};
+		$('#graphit').on('click', submit_form);
+	</script>
+	<div id='message'>
+	</div>
 	<div id='plot'>
-		<img src="data:image/png;base64, {{ plot_url }}">
+		<img src='data:image/png;base64, {{ plot_url }}'>
 	</div>
 </div>
 </body>

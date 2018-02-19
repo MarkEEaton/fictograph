@@ -24,7 +24,7 @@ def gather_books(soup):
     return urls
 
 async def fetch(session, url):
-    with aiohttp.Timeout(10):
+    with aiohttp.Timeout(40):
         async with session.get(url) as response:
             if response.status != 200:
                 response.raise_for_status()
