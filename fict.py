@@ -21,7 +21,7 @@ class SearchForm(Form):
 @app.route('/')
 def index():
     plot_url = plt.faux_plot()
-    return render_template('index.html', plot_url=plot_url)
+    return render_template('index.html', error_message='', plot_url=plot_url)
 
 @app.route('/getPlot', methods=['POST'])
 def getPlot():
@@ -48,10 +48,11 @@ def getPlot():
 
         cleaned_data = utils.clean(works)
         plot_url = plt.plot_it(cleaned_data)
-        return render_template("index.html", plot_url=plot_url)
+        return render_template("index.html", error_message='', plot_url=plot_url)
         
     else:
-        print('failed regex')
+        plot_url = plt.faux_plot()
+        return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Invalid characters in you search sting. Use only A-Z, -, and space.</div>', plot_url=plot_url)
 
 app.secret_key = key.key
 

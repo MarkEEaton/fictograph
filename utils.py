@@ -6,12 +6,12 @@ from bs4 import BeautifulSoup
 
 def clean(data):
     cleaned = []
-    for i in range(len(data)):
+    for i, item in enumerate(data):
         try:
-            if data[i]['date'] != data[i+1]['date']:
-                cleaned.append(data[i])
+            if item['date'] != data[i+1]['date']:
+                cleaned.append(item)
         except IndexError:
-            cleaned.append(data[i])
+            cleaned.append(item)
     return cleaned
 
 def gather_books(soup):

@@ -13,12 +13,12 @@
 	</h1>
 	<br />
 	<p>
-	This application shows the awesomeness of an author's work chronologically, as measured by the books' average star rating on Goodreads.	<br />Inspired by the hand-drawn fictographs of Greg Priestman.
+	This application shows the <strong>awesomeness of an author's work</strong> chronologically, as measured by the books' average star rating on Goodreads.	<br />Inspired by the hand-drawn fictographs of Greg Priestman.
 	</p>
 	<p>
-	<form class="form-inline" autocomplete="off" action="{{ url_for('getPlot') }}" method="post">
+	<form id="authorform" class="form-inline" autocomplete="off" action="{{ url_for('getPlot') }}" method="post">
 			<div class="form-group">
-				<input name="authorname" class="form-control" placeholder="Author's name" type="text" id="on_enter">
+				<input name="authorname" class="form-control" autofocus placeholder="Author's name" type="text" id="on_enter">
 				<input type="submit" id="graphit" value="Graph it" class="btn btn-secondary active" style="margin-left:5px">
 			</div>
 		</form>
@@ -31,11 +31,13 @@
 				}
 			});
 		var submit_form = function(e) {
+			document.getElementById('authorform').submit()
 			$('#message').empty().append('<div class="alert alert-dark" role="alert"><strong>Patience!</strong> This will take a long time.</div>')
 			};
 		$('#graphit').on('click', submit_form);
 	</script>
 	<div id='message' style='position:absolute;'>
+		{{ error_message|safe }}
 	</div>
 	<div id='plot'>
 		<img src='data:image/png;base64, {{ plot_url }}'>

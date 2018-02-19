@@ -18,8 +18,6 @@ def plot_it(data):
 
     df = pd.DataFrame(data=data)
     df = df.sort_values(['date'])
-    
-    #sns.set(style='darkgrid')
 
     # if there's only two books, don't bother smoothing
     if len(df) == 2:
