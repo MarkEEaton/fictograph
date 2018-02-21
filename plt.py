@@ -1,4 +1,3 @@
-import json
 import io
 import base64
 import pandas as pd
@@ -9,7 +8,7 @@ from scipy.interpolate import pchip
 from adjustText import adjust_text
 
 
-def plot_it(data):    
+def plot_it(data):
     """ generate a plot of the author's books """
 
     if len(data) <= 1:
@@ -24,17 +23,17 @@ def plot_it(data):
         x = df.date
         y = df.rating
         ax = plt.plot(x, y)
-    
+
     else:
         x_smooth = np.linspace(df.date.min(), df.date.max(), num=400)
         pch = pchip(df.date, df.rating)
-        plt.plot(x_smooth, pch(x_smooth), 'b-', label='pchip')    
-    
+        plt.plot(x_smooth, pch(x_smooth), 'b-', label='pchip')
+
     # set the ticks and limits
-    date_max = floor(df.date.max()) + 2 
+    date_max = floor(df.date.max()) + 2
     date_min = floor(df.date.min()) - 2
     date_range = range(date_min, date_max, 4)
-    
+
     ylim_max = df.rating.max() + 0.2
     ylim_min = df.rating.min() - 0.2
 
@@ -56,7 +55,7 @@ def plot_it(data):
         texts1.append(plt.text(x, y, s, fontsize=8))
     for x, y, s in (bottom[:5]):
         texts2.append(plt.text(x, y, s, fontsize=8))
-    
+
     # make the labels adjust to each other
     adjust_text(texts1,
                 force_text=10,
@@ -68,9 +67,9 @@ def plot_it(data):
                 va='top',
                 only_move={'text': 'y', 'points': 'y'},
                 arrowprops=dict(arrowstyle='-', color='black', lw=0.5))
-    
+
     plt.ylabel('Awesomeness\n(average Goodreads stars)')
-    
+
     # to the web!
     fig = plt.gcf()
     fig.set_size_inches(7, 7)
