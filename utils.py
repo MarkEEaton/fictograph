@@ -5,10 +5,14 @@ import key
 from bs4 import BeautifulSoup
 
 def clean(data):
+    sorted_data = sorted(data, key=lambda k: k['date'])
+
     cleaned = []
-    for i, item in enumerate(data):
+    for i, item in enumerate(sorted_data):
         try:
-            if item['date'] != data[i+1]['date']:
+            if item['date'] ==  sorted_data[i+1]['date']:
+                pass
+            else:
                 cleaned.append(item)
         except IndexError:
             cleaned.append(item)
