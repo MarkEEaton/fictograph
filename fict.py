@@ -19,12 +19,16 @@ class SearchForm(Form):
 
 @app.route('/')
 def index():
+    """ display the index page"""
+
     plot_url = plt.faux_plot()
     return render_template('index.html', error_message='', plot_url=plot_url)
 
 
 @app.route('/getPlot', methods=['POST'])
 def getPlot():
+    """ make the plot """
+
     # get the author's name
     name = request.form['authorname']
     name = name.replace(' ', '+')
@@ -44,10 +48,10 @@ def getPlot():
 
         # create the data list
         works = []
-        print("Number of books found: " + str(len(soup2.find_all('book'))))
         book_urls = utils.gather_books(soup2)
         works = utils.run_asy(book_urls)
 
+        # clean up the data and plot it
         cleaned_data = utils.clean(works)
         plot_url = plt.plot_it(cleaned_data)
         return render_template("index.html", error_message='',

@@ -6,9 +6,15 @@ from bs4 import BeautifulSoup
 
 
 def clean(data):
+    """ clean the data """
+
+    # sort the data by date
     sorted_data = sorted(data, key=lambda k: k['date'])
 
     cleaned = []
+
+    # if there are duplicate dates, add some randomness so that they are not
+    # exact duplicates
     for i, item in enumerate(sorted_data):
         try:
             if item['date'] == sorted_data[i+1]['date']:
@@ -25,8 +31,9 @@ def clean(data):
 
 
 def gather_books(soup):
-    urls = []
+    """ assemble the urls for all of the author's books """
 
+    urls = []
     for book in soup.find_all('book'):
         # use the book.show api to get original publication year
         url = 'https://www.goodreads.com/book/show.xml?key='\
@@ -35,6 +42,7 @@ def gather_books(soup):
     return urls
 
 
+# do some async magic to make the book fetching go faster
 async def fetch(session, url):
     with aiohttp.Timeout(40):
         async with session.get(url) as response:
@@ -50,6 +58,7 @@ async def fetch_all(session, urls, loop):
 
 
 def run_asy(urls):
+    """ run the asynchronous book fetch; return the works """
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     with aiohttp.ClientSession(loop=loop) as session:

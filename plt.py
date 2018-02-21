@@ -15,6 +15,7 @@ def plot_it(data):
         print('This author does not have enough books to graph')
         return
 
+    # create a dataframe
     df = pd.DataFrame(data=data)
     df = df.sort_values(['date'])
 
@@ -24,6 +25,7 @@ def plot_it(data):
         y = df.rating
         ax = plt.plot(x, y)
 
+    # otherwise, smooth the line
     else:
         x_smooth = np.linspace(df.date.min(), df.date.max(), num=400)
         pch = pchip(df.date, df.rating)
@@ -83,6 +85,8 @@ def plot_it(data):
 
 
 def faux_plot():
+    """ this empty plot shows on the index page before a search is run """
+
     img = io.BytesIO()
     plt.savefig(img, format='png')
     img.seek(0)
