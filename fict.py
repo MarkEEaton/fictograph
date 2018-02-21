@@ -13,8 +13,9 @@ app = Flask(__name__)
 class SearchForm(Form):
     """ set up wtforms class """
     keywords = StringField('query', [
-        validators.Length(max=200, message="length"),
-        validators.Regexp('^[\-\+a-zA-Z]*$', message='regex')])
+        validators.Length(max=200, message='You cannot enter more than 200 characters.'),
+        validators.Regexp('^[\-\+a-zA-Z]*$', message='Invalid characters in your search string. Use only A-Z, -, and space.'),
+        validators.DataRequired(message='You must type in something.')])
 
 
 @app.route('/')
@@ -39,12 +40,18 @@ def getPlot():
         req1 = requests.get('https://www.goodreads.com/api/author_url/'
                             + name + '?key=' + key.token)
         soup1 = BeautifulSoup(req1.text, 'xml')
+        if soup1.author == None:
+            plot_url = plt.faux_plot()
+            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
         auth_id = soup1.author['id']
 
         # get the author's books based on the author id
         req2 = requests.get('https://www.goodreads.com/author/list.xml?key='
                             + key.token + '&page=1-10&id=' + auth_id)
         soup2 = BeautifulSoup(req2.text, 'xml')
+        if int(soup2.author.books['total']) <= 1:
+            plot_url = plt.faux_plot()
+            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">This author does not have enough books to graph.</div>', plot_url=plot_url)
 
         # create the data list
         works = []
@@ -59,7 +66,7 @@ def getPlot():
 
     else:
         plot_url = plt.faux_plot()
-        return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Invalid characters in you search sting. Use only A-Z, -, and space.</div>', plot_url=plot_url)
+        return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">' + form.errors['keywords'][0] + '</div>', plot_url=plot_url)
 
 
 app.secret_key = key.key
