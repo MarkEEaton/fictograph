@@ -2,6 +2,7 @@ import requests
 import aiohttp
 import asyncio
 import key
+from random import uniform
 from bs4 import BeautifulSoup
 
 def clean(data):
@@ -11,7 +12,11 @@ def clean(data):
     for i, item in enumerate(sorted_data):
         try:
             if item['date'] ==  sorted_data[i+1]['date']:
-                pass
+                cleaned.append({'title': item['title'],
+                                'date': item['date'] + uniform(0, 1),
+                                'rating': item['rating'],
+                                'id': item['id']
+                                })
             else:
                 cleaned.append(item)
         except IndexError:

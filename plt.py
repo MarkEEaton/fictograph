@@ -3,8 +3,8 @@ import io
 import base64
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+from math import floor
 from scipy.interpolate import pchip
 from adjustText import adjust_text
 
@@ -31,8 +31,8 @@ def plot_it(data):
         plt.plot(x_smooth, pch(x_smooth), 'b-', label='pchip')    
     
     # set the ticks and limits
-    date_max = df.date.max() + 2 
-    date_min = df.date.min() - 2
+    date_max = floor(df.date.max()) + 2 
+    date_min = floor(df.date.min()) - 2
     date_range = range(date_min, date_max, 4)
     
     ylim_max = df.rating.max() + 0.2
