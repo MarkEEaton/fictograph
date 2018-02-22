@@ -1,11 +1,14 @@
 import io
 import base64
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from math import floor
 from scipy.interpolate import pchip
 from adjustText import adjust_text
+
 
 
 def plot_it(data):
@@ -34,7 +37,7 @@ def plot_it(data):
     # set the ticks and limits
     date_max = floor(df.date.max()) + 2
     date_min = floor(df.date.min()) - 2
-    date_range = range(date_min, date_max, 4)
+    date_range = range(date_min, date_max, 5)
 
     ylim_max = df.rating.max() + 0.2
     ylim_min = df.rating.min() - 0.2
