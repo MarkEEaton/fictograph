@@ -14,7 +14,7 @@ class SearchForm(Form):
     """ set up wtforms class """
     keywords = StringField('query', [
         validators.Length(max=200, message='You cannot enter more than 200 characters.'),
-        validators.Regexp('^[\-\+a-zA-Z]*$', message='Invalid characters in your search string. Use only A-Z, -, and space.'),
+        validators.Regexp('^[\-\ a-zA-Z]*$', message='Invalid characters in your search string. Use only A-Z, -, and space.'),
         validators.DataRequired(message='You must type in something.')])
 
 
@@ -31,11 +31,11 @@ def getPlot():
     """ make the plot """
 
     # get the author's name
-    name = request.form['authorname']
-    name = name.replace(' ', '+')
+    untrusted_name = request.form['authorname']
 
-    form = SearchForm(keywords=name)
+    form = SearchForm(keywords=untrusted_name)
     if form.validate():
+        name = untrusted_name.replace(' ', '+')
         # search the author name and get the author id
         req1 = requests.get('https://www.goodreads.com/api/author_url/'
                             + name + '?key=' + key.token)
