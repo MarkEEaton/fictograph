@@ -61,7 +61,7 @@ def getPlot():
         # clean up the data and plot it
         cleaned_data = utils.clean(works)
         plot_url = plt.plot_it(cleaned_data)
-        return render_template("index.html", error_message='',
+        return render_template("index.html", error_message='<div class="alert alert-dark" role="alert">Showing results for: <strong>' + soup2.find('name').string + '</strong></div>',
                                plot_url=plot_url)
 
     else:
