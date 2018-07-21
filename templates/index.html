@@ -16,7 +16,7 @@
 	This application shows the <strong>awesomeness of an author's work</strong> chronologically, as measured by the books' average star ratings on Goodreads.	<br />Inspired by the hand-drawn fictographs of Greg Priestman.
 	</p>
 	<p>
-	<form id="authorform" class="form-inline" autocomplete="off" action="{{ url_for('getPlot') }}" method="post">
+	<form id="authorform" class="form-inline" autocomplete="off" action="{{ url_for('get_plot') }}" method="post">
 			<div class="form-group">
 				<input name="authorname" class="form-control" autofocus placeholder="Author's name" type="text" id="on_enter">
 				<input type="submit" id="graphit" value="Graph it" class="btn btn-secondary active" style="margin-left:5px">

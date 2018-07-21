@@ -1,11 +1,12 @@
+""" run the fictograph flask application """
 import requests
 import lxml
+from bs4 import BeautifulSoup
+from flask import Flask, render_template, request, url_for
+from wtforms import Form, StringField, validators
 import key
 import utils
 import plt
-from bs4 import BeautifulSoup
-from wtforms import Form, StringField, validators
-from flask import Flask, render_template, request, url_for
 
 app = Flask(__name__)
 
@@ -14,7 +15,9 @@ class SearchForm(Form):
     """ set up wtforms class """
     keywords = StringField('query', [
         validators.Length(max=200, message='You cannot enter more than 200 characters.'),
-        validators.Regexp('^[\-\ a-zA-Z]*$', message='Invalid characters in your search string. Use only A-Z, -, and space.'),
+        validators.Regexp(r'^[\-a-zA-Z ]*$',
+                          message='Invalid characters in your search string. \
+                                   Use only A-Z, -, and space.'),
         validators.DataRequired(message='You must type in something.')])
 
 
@@ -26,8 +29,8 @@ def index():
     return render_template('index.html', error_message='', plot_url=plot_url)
 
 
-@app.route('/getPlot', methods=['POST'])
-def getPlot():
+@app.route('/get_plot', methods=['POST'])
+def get_plot():
     """ make the plot """
 
     # get the author's name
@@ -40,7 +43,7 @@ def getPlot():
         req1 = requests.get('https://www.goodreads.com/api/author_url/'
                             + name + '?key=' + key.token)
         soup1 = BeautifulSoup(req1.text, 'xml')
-        if soup1.author == None:
+        if soup1.author is None:
             plot_url = plt.faux_plot()
             return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
         auth_id = soup1.author['id']

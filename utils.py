@@ -1,8 +1,9 @@
-import aiohttp
+""" some tools to work with the data """
 import asyncio
-import key
 from random import uniform
+import aiohttp  # use version 2.3.10
 from bs4 import BeautifulSoup
+import key
 
 
 def clean(data):
@@ -42,8 +43,8 @@ def gather_books(soup):
     return urls
 
 
-# do some async magic to make the book fetching go faster
 async def fetch(session, url):
+    """ do some async magic to make the book fetching go faster"""
     with aiohttp.Timeout(40):
         async with session.get(url) as response:
             if response.status != 200:
@@ -52,8 +53,9 @@ async def fetch(session, url):
 
 
 async def fetch_all(session, urls, loop):
+    """ loop """
     results = await asyncio.gather(*[loop.create_task(fetch(session, url))
-                                   for url in urls])
+                                     for url in urls])
     return results
 
 
@@ -79,11 +81,11 @@ def run_asy(urls):
 
             if year is not None:
                 work = {
-                   'title': title,
-                   'date': int(year),
-                   'rating': float(soup3.book.average_rating.string),
-                   'id': soup3.book.id.string
-                }
+                    'title': title,
+                    'date': int(year),
+                    'rating': float(soup3.book.average_rating.string),
+                    'id': soup3.book.id.string
+                       }
                 works.append(work)
             else:
                 pass
