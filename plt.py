@@ -3,6 +3,8 @@ import io
 import base64
 from math import floor
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import pchip
