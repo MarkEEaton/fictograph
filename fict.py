@@ -2,14 +2,14 @@
 import requests
 import lxml
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request
 from wtforms import Form, StringField, validators
+from fuzzywuzzy import fuzz
 import key
 import utils
 import plt
 
 app = Flask(__name__)
-
 
 class SearchForm(Form):
     """ set up wtforms class """
@@ -43,9 +43,17 @@ def get_plot():
         req1 = requests.get('https://www.goodreads.com/api/author_url/'
                             + name + '?key=' + key.token)
         soup1 = BeautifulSoup(req1.text, 'xml')
-        if soup1.author is None:
+
+        if soup1.author is not None:
+            soup_author = soup1.find('name').contents[0].lower()
+            user_author = name.replace('+', ' ').lower()
+            fuzz_value = fuzz.ratio(soup_author, user_author)
+            print(fuzz_value, user_author, soup_author)
+
+        if (soup1.author is None or fuzz_value < 80):
             plot_url = plt.faux_plot()
             return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
+
         auth_id = soup1.author['id']
 
         # get the author's books based on the author id
