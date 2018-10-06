@@ -1,11 +1,12 @@
+""" make the plot """
 import io
 import base64
+from math import floor
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-from math import floor
 from scipy.interpolate import pchip
 from adjustText import adjust_text
 
@@ -16,7 +17,7 @@ def plot_it(data):
 
     if len(data) <= 1:
         print('This author does not have enough books to graph')
-        return
+        return None
 
     # create a dataframe
     df = pd.DataFrame(data=data)
@@ -56,9 +57,9 @@ def plot_it(data):
     sorted_items = sorted(zipped, key=lambda t: t[1], reverse=True)
     top = sorted_items[:5]
     bottom = sorted_items[-5:]
-    for x, y, s in (top[:5]):
+    for x, y, s in top[:5]:
         texts1.append(plt.text(x, y, s, fontsize=8))
-    for x, y, s in (bottom[:5]):
+    for x, y, s in bottom[:5]:
         texts2.append(plt.text(x, y, s, fontsize=8))
 
     # make the labels adjust to each other
