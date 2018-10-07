@@ -50,7 +50,7 @@ def get_plot():
             fuzz_value = fuzz.ratio(soup_author, user_author)
             print(fuzz_value, user_author, soup_author)
 
-        if (soup1.author is None or fuzz_value < 80):
+        if (soup1.author is None or fuzz_value < 60):
             plot_url = plt.faux_plot()
             return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
 
