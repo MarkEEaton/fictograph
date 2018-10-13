@@ -50,7 +50,7 @@ def get_plot():
             fuzz_value = fuzz.ratio(soup_author, user_author)
             print(fuzz_value, user_author, soup_author)
 
-        if (soup1.author is None or fuzz_value < 80):
+        if (soup1.author is None or fuzz_value < 60):
             plot_url = plt.faux_plot()
             return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
 
@@ -60,6 +60,7 @@ def get_plot():
         req2 = requests.get('https://www.goodreads.com/author/list.xml?key='
                             + key.token + '&page=1-10&id=' + auth_id)
         soup2 = BeautifulSoup(req2.text, 'xml')
+        
         if int(soup2.author.books['total']) <= 1:
             plot_url = plt.faux_plot()
             return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">This author does not have enough books to graph.</div>', plot_url=plot_url)
@@ -71,6 +72,10 @@ def get_plot():
 
         # clean up the data and plot it
         cleaned_data = utils.clean(works)
+        if len(cleaned_data) <= 1:
+            plot_url = plt.faux_plot()
+            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">This author does not have enough books to graph.</div>', plot_url=plot_url)
+
         plot_url = plt.plot_it(cleaned_data)
         return render_template("index.html", error_message='<div class="alert alert-dark" role="alert">Showing results for: <strong>' + soup2.find('name').string + '</strong></div>',
                                plot_url=plot_url)
