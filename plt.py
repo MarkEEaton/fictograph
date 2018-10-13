@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 import numpy as np
 from scipy.interpolate import pchip
 from adjustText import adjust_text
@@ -42,9 +43,10 @@ def plot_it(data):
     ylim_min = df.rating.min() - 0.2
 
     plt.ylim(ylim_min, ylim_max)
-    plt.locator_params(axis='x', nbins=15)
+    plt.locator_params(axis='x', nbins=14)
     plt.xlim(date_min, date_max)
     ax = plt.gca()
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
 
