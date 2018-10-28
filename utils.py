@@ -1,5 +1,7 @@
 """ some tools to work with the data """
-import asyncio
+import asks
+import trio
+import multio
 from random import uniform
 import aiohttp  # use version 2.3.10
 from bs4 import BeautifulSoup
@@ -43,29 +45,22 @@ def gather_books(soup):
     return urls
 
 
-async def fetch(session, url):
-    """ do some async magic to make the book fetching go faster"""
-    with aiohttp.Timeout(40):
-        async with session.get(url) as response:
-            if response.status != 200:
-                response.raise_for_status()
-            return await response.text()
+htmls = []
+
+async def fetch(url: str):
+    response = await asks.get(url)
+    htmls.append(response.content)
 
 
-async def fetch_all(session, urls, loop):
-    """ loop """
-    results = await asyncio.gather(*[loop.create_task(fetch(session, url))
-                                     for url in urls])
-    return results
+def run_asy(urls: list):
+    multio.init('trio')
+    return trio.run(nurs, urls)
 
 
-def run_asy(urls):
-    """ run the asynchronous book fetch; return the works """
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    with aiohttp.ClientSession(loop=loop) as session:
-        htmls = loop.run_until_complete(
-            fetch_all(session, urls, loop))
+async def nurs(urls: list):
+    async with trio.open_nursery() as nursery:
+        for url in urls:
+            nursery.start_soon(fetch, url, name=url)
 
     works = []
     for page in htmls:
