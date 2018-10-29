@@ -52,7 +52,10 @@ def get_plot():
 
         if (soup1.author is None or fuzz_value < 60):
             plot_url = plt.faux_plot()
-            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">Author not found.</div>', plot_url=plot_url)
+            return render_template('index.html',
+                                   error_message='<div class="alert alert-danger"' +
+                                   'role="alert">Author not found.</div>',
+                                   plot_url=plot_url)
 
         auth_id = soup1.author['id']
 
@@ -60,10 +63,13 @@ def get_plot():
         req2 = requests.get('https://www.goodreads.com/author/list.xml?key='
                             + key.token + '&page=1-10&id=' + auth_id)
         soup2 = BeautifulSoup(req2.text, 'xml')
-        
+
         if int(soup2.author.books['total']) <= 1:
             plot_url = plt.faux_plot()
-            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">This author does not have enough books to graph.</div>', plot_url=plot_url)
+            return render_template('index.html',
+                                   error_message='<div class="alert alert-danger" role="alert">' +
+                                   'This author does not have enough books to graph. Check your spelling?</div>',
+                                   plot_url=plot_url)
 
         # create the data list
         works = []
@@ -74,15 +80,23 @@ def get_plot():
         cleaned_data = utils.clean(works)
         if len(cleaned_data) <= 1:
             plot_url = plt.faux_plot()
-            return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">This author does not have enough books to graph.</div>', plot_url=plot_url)
+            return render_template('index.html',
+                                   error_message='<div class="alert alert-danger" role="alert">' +
+                                   'This author does not have enough books to graph.</div>',
+                                   plot_url=plot_url)
 
         plot_url = plt.plot_it(cleaned_data)
-        return render_template("index.html", error_message='<div class="alert alert-dark" role="alert">Showing results for: <strong>' + soup2.find('name').string + '</strong></div>',
+        return render_template("index.html",
+                               error_message='<div class="alert alert-dark" role="alert">' +
+                               'Showing results for: <strong>' + soup2.find('name').string +
+                               '</strong></div>',
                                plot_url=plot_url)
 
     else:
         plot_url = plt.faux_plot()
-        return render_template('index.html', error_message='<div class="alert alert-danger" role="alert">' + form.errors['keywords'][0] + '</div>', plot_url=plot_url)
+        return render_template('index.html', error_message='<div class="alert alert-danger"' +
+                               'role="alert">' + form.errors['keywords'][0] + '</div>',
+                               plot_url=plot_url)
 
 
 app.secret_key = key.key
