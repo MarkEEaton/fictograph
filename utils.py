@@ -1,9 +1,8 @@
 """ some tools to work with the data """
+from random import uniform
 import asks
 import trio
 import multio
-from random import uniform
-import aiohttp  # use version 2.3.10
 from bs4 import BeautifulSoup
 import key
 
@@ -48,16 +47,19 @@ def gather_books(soup):
 htmls = []
 
 async def fetch(url: str):
+    """ fetch an individual url """
     response = await asks.get(url)
     htmls.append(response.content)
 
 
 def run_asy(urls: list):
+    """ set up trio """
     multio.init('trio')
     return trio.run(nurs, urls)
 
 
 async def nurs(urls: list):
+    """ run the trio loop """
     async with trio.open_nursery() as nursery:
         for url in urls:
             nursery.start_soon(fetch, url, name=url)
@@ -80,10 +82,10 @@ async def nurs(urls: list):
                     'date': int(year),
                     'rating': float(soup3.book.average_rating.string),
                     'id': soup3.book.id.string
-                       }
+                    }
                 works.append(work)
             else:
                 pass
-        except Exception as e:
-            print(e)
+        except Exception as exception:
+            print(exception)
     return works
