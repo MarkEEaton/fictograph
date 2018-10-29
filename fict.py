@@ -68,7 +68,7 @@ def get_plot():
             plot_url = plt.faux_plot()
             return render_template('index.html',
                                    error_message='<div class="alert alert-danger" role="alert">' +
-                                   'This author does not have enough books to graph.</div>',
+                                   'This author does not have enough books to graph. Check your spelling?</div>',
                                    plot_url=plot_url)
 
         # create the data list
