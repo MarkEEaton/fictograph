@@ -2,14 +2,16 @@
 import io
 import base64
 from math import floor
-from adjustText import adjust_text
-from matplotlib.ticker import MaxNLocator
-import matplotlib.pyplot as plt
-import matplotlib
-from scipy.interpolate import pchip
-import numpy as np
 import pandas as pd
+import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+import numpy as np
+from scipy.interpolate import pchip
+from adjustText import adjust_text
+
+# import order matters! may break if reordered.
 
 
 def plot_it(data):

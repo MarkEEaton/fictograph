@@ -44,9 +44,7 @@ def gather_books(soup):
     return urls
 
 
-htmls = []
-
-async def fetch(url: str):
+async def fetch(url: str, htmls: list):
     """ fetch an individual url """
     response = await asks.get(url)
     htmls.append(response.content)
@@ -60,9 +58,10 @@ def run_asy(urls: list):
 
 async def nurs(urls: list):
     """ run the trio loop """
+    htmls = []
     async with trio.open_nursery() as nursery:
         for url in urls:
-            nursery.start_soon(fetch, url, name=url)
+            nursery.start_soon(fetch, url, htmls, name=url)
 
     works = []
     for page in htmls:
