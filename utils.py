@@ -11,7 +11,7 @@ def clean(data):
     """ clean the data """
 
     # sort the data by date
-    sorted_data = sorted(data, key=lambda k: k['date'])
+    sorted_data = sorted(data, key=lambda k: k["date"])
 
     cleaned = []
 
@@ -19,12 +19,15 @@ def clean(data):
     # exact duplicates
     for i, item in enumerate(sorted_data):
         try:
-            if item['date'] == sorted_data[i+1]['date']:
-                cleaned.append({'title': item['title'],
-                                'date': item['date'] + uniform(0, 1),
-                                'rating': item['rating'],
-                                'id': item['id']
-                                })
+            if item["date"] == sorted_data[i + 1]["date"]:
+                cleaned.append(
+                    {
+                        "title": item["title"],
+                        "date": item["date"] + uniform(0, 1),
+                        "rating": item["rating"],
+                        "id": item["id"],
+                    }
+                )
             else:
                 cleaned.append(item)
         except IndexError:
@@ -36,10 +39,14 @@ def gather_books(soup):
     """ assemble the urls for all of the author's books """
 
     urls = []
-    for book in soup.find_all('book'):
+    for book in soup.find_all("book"):
         # use the book.show api to get original publication year
-        url = 'https://www.goodreads.com/book/show.xml?key='\
-              + key.token + '&id=' + book.id.string
+        url = (
+            "https://www.goodreads.com/book/show.xml?key="
+            + key.token
+            + "&id="
+            + book.id.string
+        )
         urls.append(url)
     return urls
 
@@ -52,7 +59,7 @@ async def fetch(url: str, htmls: list):
 
 def run_asy(urls: list):
     """ set up trio """
-    multio.init('trio')
+    multio.init("trio")
     return trio.run(nurs, urls)
 
 
@@ -65,23 +72,23 @@ async def nurs(urls: list):
 
     works = []
     for page in htmls:
-        soup3 = BeautifulSoup(page, 'xml')
+        soup3 = BeautifulSoup(page, "xml")
         try:
             year = soup3.book.work.original_publication_year.string
 
             # truncate long titles
             if len(soup3.book.title.string) > 20:
-                title = soup3.book.title.string[:20] + '...'
+                title = soup3.book.title.string[:20] + "..."
             else:
                 title = soup3.book.title.string
 
             if year is not None:
                 work = {
-                    'title': title,
-                    'date': int(year),
-                    'rating': float(soup3.book.average_rating.string),
-                    'id': soup3.book.id.string
-                    }
+                    "title": title,
+                    "date": int(year),
+                    "rating": float(soup3.book.average_rating.string),
+                    "id": soup3.book.id.string,
+                }
                 works.append(work)
             else:
                 pass
