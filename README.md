@@ -1,5 +1,7 @@
 # Plot the awesomeness of an author's work over time
 
+## *** This project is no longer being maintained, as Goodreads retired their API in December 2020 ***
+
 ![Screenshot of the application](img/sample.png?raw=True)
 
 This application charts the awesomeness of an author's work over time, as measured by those works' average Goodreads star ratings. It does a few things:
