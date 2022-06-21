@@ -21,7 +21,7 @@ lxml==4.6.3
 MarkupSafe==1.1.1
 matplotlib==3.1.0
 multio==0.2.5
-numpy==1.16.4
+numpy==1.22.0
 outcome==1.0.0
 packaging==19.0
 pandas==0.24.2
